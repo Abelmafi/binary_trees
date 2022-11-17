@@ -8,68 +8,62 @@
  */
 bst_t *bst_insert(bst_t **tree, int value)
 {
- bst_t *tmp = *tree;
- bst_t *second = NULL;
- bst_t *new = binary_tree_node(NULL, value);
+	bst_t *front, *tail = NULL, *new_node;
 
- if (*tree == NULL)
-	 *tree = new;
+	if (!tree || !value)
+		return (NULL);
+	if (!*tree)
+		return (*tree = binary_tree_node(NULL, value));
 
- while (tmp)
- {
-  second = tmp;
-  if (value < tmp->n)
-	  tmp = tmp->left;
-  else if (value > tmp->n)
-	  tmp = tmp->right;
-  else if (value == tmp->n)
-	  return (NULL);
- }
-
- if (second == NULL)
-	 second = new;
- else if (value < second->n)
- {
-  second->left = new;
-  new->parent = second;
- }
- else
- {
-  second->right = new;
-  new->parent = second;
- }
-
- return (new);
+	front = *tree;
+	while (front)
+	{
+		tail = front;
+		if (value < front->n)
+			front = front->left;
+		else if (value > front->n)
+			front = front->right;
+		else if (value == front->n)
+			return (NULL);
+	}
+	new_node = binary_tree_node(*tree, value);
+	if (value > tail->n)
+	{
+		tail->right = new_node;
+		new_node->parent = tail;
+		return (new_node);
+	}
+	tail->left = new_node;
+	new_node->parent = tail;
+	return (new_node);
 }
-
 /**
+ * avl_insert - inserts a value in an AVL Tree.
+ * @tree: a double pointer to the root node of the
+ * AVL tree for inserting the value.
+ * @value: is the value to store in the node to be inserted.
  *
- *
- *
- *
- *
+ * Return: return a pointer to the created node, or NULL on failure.
  */
 avl_t *avl_insert(avl_t **tree, int value)
 {
 	int balance = 0;
- avl_t *node = bst_insert(tree, value);
+	avl_t *node = bst_insert(tree, value);
 
- balance = binary_tree_balance(*tree);
-
- if (balance > 1 && value < node->left->n)
- 	return (binary_tree_rotate_right(node));
- if (balance < -1 && value > node->right->n)
-  	return (binary_tree_rotate_left(node));
- if (balance > 1 && value > node->left->n)
- {
-  node->left = binary_tree_rotate_left(node->left);
-  	return (binary_tree_rotate_right(node));
- }
- if (balance < -1 && value < node->right->n)
- {
-  node->right = binary_tree_rotate_right(node->right);
-  return (binary_tree_rotate_left(node));
- }
-
- return (node);
+	balance = binary_tree_balance(*tree);
+	if (balance > 1 && value < node->left->n)
+		return (binary_tree_rotate_right(node));
+	if (balance < -1 && value > node->right->n)
+		return (binary_tree_rotate_left(node));
+	if (balance > 1 && value > node->left->n)
+	{
+		node->left = binary_tree_rotate_left(node->left);
+		return (binary_tree_rotate_right(node));
+	}
+	if (balance < -1 && value < node->right->n)
+	{
+		node->right = binary_tree_rotate_right(node->right);
+		return (binary_tree_rotate_left(node));
+	}
+	return (node);
 }
