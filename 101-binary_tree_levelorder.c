@@ -4,7 +4,7 @@
  * @node: a pointer to the root node of the tree to measure the height.
  * Return: height of tree.
  */
-int height_of(binary_tree_t *node)
+int height_of(const binary_tree_t *node)
 {
 	int left_side, right_side;
 
