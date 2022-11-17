@@ -10,7 +10,7 @@ bst_t *bst_insert(bst_t **tree, int value)
 {
 	bst_t *front, *tail = NULL, *new_node;
 
-	if (!tree)
+	if (!tree || !value)
 		return (NULL);
 	new_node = binary_tree_node(*tree, value);
 	if (!*tree)
