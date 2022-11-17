@@ -1,6 +1,7 @@
 #include "binary_trees.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <limits.h>
 /**
  * height_of - calculate height of given binary tree.
  * @node: a pointer to the root node of the tree to measure the height.
@@ -21,10 +22,12 @@ int height_of(binary_tree_t *node)
 /**
  * is_avl - checks if a binary tree is a valid.
  * @node: a pointer to the root node of the avl to check.
+ * @min: tree min value.
+ * @max: tree max value.
  *
  * Return: return 1 if tree is a valid AVL Tree, and 0 otherwise.
  */
-bool is_avl(const binary_tree_t *node)
+bool is_avl(const binary_tree_t *node, int min, int max)
 {
 	int h_l, h_r;
 
@@ -32,7 +35,10 @@ bool is_avl(const binary_tree_t *node)
 		return (true);
 	h_l = height_of(node->left);
 	h_r = height_of(node->right);
-	if (abs(h_l - h_r) <= 1 && is_avl(node->left) && is_avl(node->right))
+	if (node->n < min || node->n > max)
+		return (false);
+	if (abs(h_l - h_r) <= 1 && is_avl(node->left, min, node->n - 1)
+			&& is_avl(node->right, node->n + 1, max))
 		return (true);
 	return (false);
 }
@@ -47,7 +53,7 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 {
 	if (!tree)
 		return (0);
-	if (is_avl(tree))
+	if (is_avl(tree, INT_MIN, INT_MAX))
 		return (1);
 	return (0);
 }
